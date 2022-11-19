@@ -1,0 +1,64 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+model Category {
+  id   String @id
+  name String @unique
+}
+
+model Post {
+  id             String   @id
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime
+  authorId       String
+  favouritedById String
+  averageRating  Float
+  title          String
+}
+
+model User {
+  id          String    @id
+  name        String
+  age         Int
+  email       String
+  preferences Json
+  role        User_role @default(BASIC)
+
+  @@unique([name, age])
+  @@index([email])
+}
+
+model UserPreferences {
+  id           String  @id
+  emailUpdates Boolean @default(true)
+  userId       String  @unique
+}
+
+model CategoryToPost {
+  A String
+  B String
+
+  @@unique([A, B], map: "_CategoryToPost_AB_unique")
+  @@index([B], map: "_CategoryToPost_B_index")
+  @@map("_CategoryToPost")
+}
+
+enum User_role {
+  ADMIN
+  BASIC
+  EDITOR
+}
+
+model T3ShoppingItem {
+  id      String  @id @default(cuid())
+  name    String
+  checked Boolean @default(false)
+}
