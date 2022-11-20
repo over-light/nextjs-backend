@@ -4,9 +4,9 @@ generator client {
 }
 
 datasource db {
-  provider             = "mysql"
-  url                  = env("DATABASE_URL")
-  referentialIntegrity = "prisma"
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model Category {
@@ -51,14 +51,14 @@ model CategoryToPost {
   @@map("_CategoryToPost")
 }
 
-enum User_role {
-  ADMIN
-  BASIC
-  EDITOR
-}
-
 model T3ShoppingItem {
   id      String  @id @default(cuid())
   name    String
   checked Boolean @default(false)
+}
+
+enum User_role {
+  ADMIN
+  BASIC
+  EDITOR
 }
