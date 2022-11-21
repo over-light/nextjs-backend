@@ -8,13 +8,19 @@ import { trpc } from "../utils/trpc";
 const Home: NextPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const { data, refetch, isLoading } = trpc.item.getAllItems.useQuery();
-  const { mutateAsync: deleteList } = trpc.item.deleteItem.useMutation();
+  const { mutateAsync: deleteList, error } = trpc.item.deleteItem.useMutation();
   const deleteListItem = async (id: string) => {
-    console.log(id);
-    await deleteList({ id });
-    console.log("first");
-    refetch();
+    try {
+      await deleteList({ id });
+      refetch();
+    } catch (error) {
+      console.log(error);
+    }
   };
+  if (error?.data) {
+    // zodError will be inferred
+    return <pre>Error: {JSON.stringify(error.data, null, 2)}</pre>;
+  }
   if (!data || isLoading) return <>Loading...</>;
   return (
     <>

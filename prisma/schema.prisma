@@ -57,12 +57,6 @@ model T3ShoppingItem {
   checked Boolean @default(false)
 }
 
-enum User_role {
-  ADMIN
-  BASIC
-  EDITOR
-}
-
 model WebDevPost {
   id       String          @id @default(uuid())
   title    String
@@ -82,21 +76,27 @@ model WebDevComment {
   message   String
   createdAt DateTime        @default(now())
   updatedAt DateTime        @updatedAt
-  user      WebDevUser      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  post      WebDevPost      @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    String
+  parentId  String?
+  user      WebDevUser      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      WebDevPost      @relation(fields: [postId], references: [id], onDelete: Cascade)
   parent    WebDevComment?  @relation("ParentComment", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   children  WebDevComment[] @relation("ParentComment")
-  parentId  String?
   likes     WebDevLike[]
 }
 
 model WebDevLike {
-  user      WebDevUser    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  comment   WebDevComment @relation(fields: [commentId], references: [id], onDelete: Cascade)
   commentId String
+  user      WebDevUser    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comment   WebDevComment @relation(fields: [commentId], references: [id], onDelete: Cascade)
 
   @@id([commentId, userId])
+}
+
+enum User_role {
+  ADMIN
+  BASIC
+  EDITOR
 }
