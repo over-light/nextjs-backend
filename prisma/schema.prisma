@@ -62,3 +62,41 @@ enum User_role {
   BASIC
   EDITOR
 }
+
+model WebDevPost {
+  id       String          @id @default(uuid())
+  title    String
+  body     String
+  comments WebDevComment[]
+}
+
+model WebDevUser {
+  id       String          @id @default(uuid())
+  name     String
+  comments WebDevComment[]
+  likes    WebDevLike[]
+}
+
+model WebDevComment {
+  id        String          @id @default(uuid())
+  message   String
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  user      WebDevUser      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  post      WebDevPost      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    String
+  parent    WebDevComment?  @relation("ParentComment", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  children  WebDevComment[] @relation("ParentComment")
+  parentId  String?
+  likes     WebDevLike[]
+}
+
+model WebDevLike {
+  user      WebDevUser    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  comment   WebDevComment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId String
+
+  @@id([commentId, userId])
+}
