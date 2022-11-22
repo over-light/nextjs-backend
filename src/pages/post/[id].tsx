@@ -1,6 +1,8 @@
+import { type WebDevComment } from "@prisma/client";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useMemo } from "react";
+import { RTQ_VARIABLES } from "../../constant";
 import { trpc } from "../../utils/trpc";
 
 const Post = () => {
@@ -11,14 +13,36 @@ const Post = () => {
       id: id as string,
     },
     {
-      refetchInterval: 20000,
-      refetchIntervalInBackground: true,
-      staleTime: 10000,
-      cacheTime: 10000,
+      ...RTQ_VARIABLES,
       enabled: !!id,
     }
   );
-  console.log(error);
+  const commentsByParentId = useMemo(() => {
+    const group: Record<
+      string,
+      Omit<
+        WebDevComment,
+        | "id"
+        | "message"
+        | "createdAt"
+        | "updatedAt"
+        | "userId"
+        | "parentId"
+        | "postId"
+      >[]
+    > = {};
+    data?.comments?.forEach((comment) => {
+      if (!comment.parentId) return [];
+      if (!group[comment.parentId]) {
+        group[comment.parentId] = [comment];
+      } else {
+        // @ts-expect-error I don't know why this is happening
+        group[comment.parentId].push(comment);
+      }
+    });
+    return group;
+  }, [data?.comments]);
+  console.log(commentsByParentId);
   return (
     <>
       <Head>
