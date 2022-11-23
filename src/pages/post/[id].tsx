@@ -17,32 +17,8 @@ const Post = () => {
       enabled: !!id,
     }
   );
-  const commentsByParentId = useMemo(() => {
-    const group: Record<
-      string,
-      Omit<
-        WebDevComment,
-        | "id"
-        | "message"
-        | "createdAt"
-        | "updatedAt"
-        | "userId"
-        | "parentId"
-        | "postId"
-      >[]
-    > = {};
-    data?.comments?.forEach((comment) => {
-      if (!comment.parentId) return [];
-      if (!group[comment.parentId]) {
-        group[comment.parentId] = [comment];
-      } else {
-        // @ts-expect-error I don't know why this is happening
-        group[comment.parentId].push(comment);
-      }
-    });
-    return group;
-  }, [data?.comments]);
-  console.log(commentsByParentId);
+
+
   return (
     <>
       <Head>
