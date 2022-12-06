@@ -2,10 +2,6 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { trpc } from "../../utils/trpc";
-// refetchInterval: 20000,
-// refetchIntervalInBackground: true,
-// staleTime: 10000,
-// cacheTime: 10000,
 const Comments: NextPage = () => {
   const { data, isLoading, error } = trpc.comments.getAllPosts.useQuery();
   return (

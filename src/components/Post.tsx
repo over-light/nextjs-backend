@@ -1,10 +1,9 @@
 import type { WebDevPost, WebDevComment, WebDevUser } from "@prisma/client";
 import { useMemo } from "react";
 import CommentList from "./CommentList";
-type COMMENTS = (Omit<
-  WebDevComment,
-  "createdAt" | "updatedAt" | "userId" | "postId"
-> & { user: WebDevUser })[];
+type COMMENTS = (Omit<WebDevComment, "updatedAt" | "userId" | "postId"> & {
+  user: WebDevUser;
+})[];
 
 type Props = {
   post: WebDevPost;

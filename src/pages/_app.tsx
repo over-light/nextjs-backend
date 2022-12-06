@@ -4,13 +4,16 @@ import { type AppType } from "next/app";
 import { trpc } from "../utils/trpc";
 
 import "../styles/globals.scss";
+import { PostProvider } from "../context/PostContext";
 const queryClient = new QueryClient();
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <Component {...pageProps} />
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    <PostProvider>
+      <QueryClientProvider client={queryClient}>
+        <Component {...pageProps} />
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </PostProvider>
   );
 };
 
